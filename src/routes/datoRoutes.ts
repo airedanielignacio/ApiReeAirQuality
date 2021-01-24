@@ -16,7 +16,7 @@ class DatoRoutes {
         await db.conectarBD()
         .then( async (mensaje) => {
             console.log(mensaje)
-            const query = await Datos.findOne().sort({date:-1})
+            const query = await Datos.findOne({ID:"Spain"}).sort({date:-1})
             res.json(query)
         })
         .catch((mensaje) => {
