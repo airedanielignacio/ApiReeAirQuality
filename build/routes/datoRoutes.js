@@ -15,11 +15,19 @@ const dato_1 = require("../model/dato");
 const database_1 = require("../database/database");
 class DatoRoutes {
     constructor() {
-        this.getSpain = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getFijo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let { id } = req.params;
+            let idv = "Spain";
+            if (id == "GREECE" || id == "greece" || id == "Greece") {
+                idv = "Greece";
+            }
+            else if (id == "BULGARIA" || id == "bulgaria" || id == "Bulgaria") {
+                idv = "Bulgaria";
+            }
             yield database_1.db.conectarBD()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
                 console.log(mensaje);
-                const query = yield dato_1.DatosDispositivosFijos.findOne({ ID: "Spain" }).sort({ date: -1 });
+                const query = yield dato_1.DatosDispositivosFijos.findOne({ ID: idv }).sort({ date: -1 });
                 res.json(query);
             }))
                 .catch((mensaje) => {
@@ -27,23 +35,11 @@ class DatoRoutes {
             });
             database_1.db.desconectarBD();
         });
-        this.getGreece = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getPortables = (req, res) => __awaiter(this, void 0, void 0, function* () {
             yield database_1.db.conectarBD()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
                 console.log(mensaje);
-                const query = yield dato_1.DatosDispositivosFijos.findOne({ ID: "Greece" }).sort({ date: -1 });
-                res.json(query);
-            }))
-                .catch((mensaje) => {
-                res.send(mensaje);
-            });
-            database_1.db.desconectarBD();
-        });
-        this.getBulgaria = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield database_1.db.conectarBD()
-                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
-                console.log(mensaje);
-                const query = yield dato_1.DatosDispositivosFijos.findOne({ ID: "Bulgaria" }).sort({ date: -1 });
+                const query = yield dato_1.DatosDispositivosPortables.find();
                 res.json(query);
             }))
                 .catch((mensaje) => {
@@ -57,9 +53,8 @@ class DatoRoutes {
         return this._router;
     }
     misRutas() {
-        this._router.get('/spain', this.getSpain),
-            this._router.get('/greece', this.getGreece),
-            this._router.get('/bulgaria', this.getBulgaria);
+        this._router.get('/fijo/:id', this.getFijo),
+            this._router.get('/portable', this.getPortables);
     }
 }
 const obj = new DatoRoutes();

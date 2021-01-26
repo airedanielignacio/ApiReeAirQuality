@@ -13,6 +13,23 @@ const DatosDispositivosFijosSchema = new Schema({
     collection:'DatosDispositivosFijos'
 })
 
+const CoordenadasSchema=new Schema({
+    _latitud: Number,
+    _longitud: Number,
+})
+
+const DatosDispositivosPortablesSchema = new Schema({
+    _id: String,
+    _co2: Number,
+    _no: Number,
+    _nh3: Number,
+    _coordenadas: CoordenadasSchema,
+    _date: Date
+},{
+    collection:'DatosDispositivosPortables'
+})
+
 
 
 export const DatosDispositivosFijos = model('DatosDispositivosFijos', DatosDispositivosFijosSchema  )
+export const DatosDispositivosPortables = model('DatosDispositivosPortables', DatosDispositivosPortablesSchema  )

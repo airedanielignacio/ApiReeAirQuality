@@ -1,5 +1,5 @@
 import {Request, Response, Router } from 'express'
-import { DatosDispositivosFijos } from '../model/dato'
+import { DatosDispositivosFijos, DatosDispositivosPortables } from '../model/dato'
 import { db } from '../database/database'
 
 class DatoRoutes {
@@ -12,11 +12,18 @@ class DatoRoutes {
         return this._router
     }
 
-    private getSpain = async (req: Request, res: Response) => {
+    private getFijo = async (req: Request, res: Response) => {
+        let {id}=req.params
+        let idv="Spain"
+        if (id=="GREECE"||id=="greece"||id=="Greece"){
+            idv="Greece"
+        } else if (id=="BULGARIA"||id=="bulgaria"||id=="Bulgaria"){
+            idv="Bulgaria"
+        }
         await db.conectarBD()
         .then( async (mensaje) => {
             console.log(mensaje)
-            const query  = await DatosDispositivosFijos.findOne({ID:"Spain"}).sort({date:-1})
+            const query  = await DatosDispositivosFijos.findOne({ID:idv}).sort({date:-1})
             res.json(query)
         })
         .catch((mensaje) => {
@@ -26,25 +33,11 @@ class DatoRoutes {
         db.desconectarBD()
     }
 
-    private getGreece = async (req: Request, res: Response) => {
+    private getPortables = async (req: Request, res: Response) => {
         await db.conectarBD()
         .then( async (mensaje) => {
             console.log(mensaje)
-            const query  = await DatosDispositivosFijos.findOne({ID:"Greece"}).sort({date:-1})
-            res.json(query)
-        })
-        .catch((mensaje) => {
-            res.send(mensaje)
-        })
-
-        db.desconectarBD()
-    }
-  
-    private getBulgaria = async (req: Request, res: Response) => {
-        await db.conectarBD()
-        .then( async (mensaje) => {
-            console.log(mensaje)
-            const query  = await DatosDispositivosFijos.findOne({ID:"Bulgaria"}).sort({date:-1})
+            const query  = await DatosDispositivosPortables.find()
             res.json(query)
         })
         .catch((mensaje) => {
@@ -56,9 +49,8 @@ class DatoRoutes {
    
 
     misRutas(){
-        this._router.get('/spain', this.getSpain),
-        this._router.get('/greece', this.getGreece),
-        this._router.get('/bulgaria', this.getBulgaria)
+        this._router.get('/fijo/:id', this.getFijo),
+        this._router.get('/portable', this.getPortables)
     }
 }
 
