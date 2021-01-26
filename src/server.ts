@@ -2,8 +2,6 @@ import express from 'express'
 import morgan from 'morgan'
 
 import { datoRoutes } from './routes/datoRoutes'
-import { identificacionRoutes } from './routes/identificacionRoutes'
-import { db } from './database/database'
 
 class Server {
     private app: express.Application
@@ -22,8 +20,7 @@ class Server {
     }
 
     private routes(){
-        this.app.use('/id', identificacionRoutes)
-        this.app.use('/dato', datoRoutes)
+        this.app.use('/', datoRoutes)
     }
     start(){
         this.app.listen(this.app.get('port'), 

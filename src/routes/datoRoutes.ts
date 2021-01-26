@@ -1,5 +1,5 @@
 import {Request, Response, Router } from 'express'
-import { Datos, Dato, tDato } from '../model/dato'
+import { DatosDispositivosFijos } from '../model/dato'
 import { db } from '../database/database'
 
 class DatoRoutes {
@@ -12,11 +12,25 @@ class DatoRoutes {
         return this._router
     }
 
-    private getDatos = async (req: Request, res: Response) => {
+    private getSpain = async (req: Request, res: Response) => {
         await db.conectarBD()
         .then( async (mensaje) => {
             console.log(mensaje)
-            const query = await Datos.findOne({ID:"Spain"}).sort({date:-1})
+            const query  = await DatosDispositivosFijos.findOne({ID:"Spain"}).sort({date:-1})
+            res.json(query)
+        })
+        .catch((mensaje) => {
+            res.send(mensaje)
+        })
+
+        db.desconectarBD()
+    }
+
+    private getGreece = async (req: Request, res: Response) => {
+        await db.conectarBD()
+        .then( async (mensaje) => {
+            console.log(mensaje)
+            const query  = await DatosDispositivosFijos.findOne({ID:"Greece"}).sort({date:-1})
             res.json(query)
         })
         .catch((mensaje) => {
@@ -26,11 +40,25 @@ class DatoRoutes {
         db.desconectarBD()
     }
   
+    private getBulgaria = async (req: Request, res: Response) => {
+        await db.conectarBD()
+        .then( async (mensaje) => {
+            console.log(mensaje)
+            const query  = await DatosDispositivosFijos.findOne({ID:"Bulgaria"}).sort({date:-1})
+            res.json(query)
+        })
+        .catch((mensaje) => {
+            res.send(mensaje)
+        })
 
+        db.desconectarBD()
+    }
    
 
     misRutas(){
-        this._router.get('/', this.getDatos)
+        this._router.get('/spain', this.getSpain),
+        this._router.get('/greece', this.getGreece),
+        this._router.get('/bulgary', this.getBulgaria)
     }
 }
 

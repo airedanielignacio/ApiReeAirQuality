@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 class DataBase {
 
-    private _cadenaConexion: string = `mongodb+srv://admin:admin@cluster0.skwlq.mongodb.net/datos?retryWrites=true&w=majority`
+    private _cadenaConexion: string = `mongodb+srv://myair:air@cluster0.mms5n.mongodb.net/DatosCalidadAire?retryWrites=true&w=majority`
     constructor(){
 
     }
@@ -19,7 +19,7 @@ class DataBase {
                 useFindAndModify: false  // para usar findOneAndDelete y findAndModify
             })
             .then( () => resolve(`Conectado a ${this._cadenaConexion}`) )
-            .catch( (error) => reject(`Error conectando a ${this._cadenaConexion}: ${error}`) )     
+            .catch( (error) => reject(`Error conectando a ${this._cadenaConexion}: ${error}`) ) 
         })
         return promise
 

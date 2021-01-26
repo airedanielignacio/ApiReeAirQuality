@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const datoRoutes_1 = require("./routes/datoRoutes");
-const identificacionRoutes_1 = require("./routes/identificacionRoutes");
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -31,8 +30,7 @@ class Server {
         });
     }
     routes() {
-        this.app.use('/id', identificacionRoutes_1.identificacionRoutes);
-        this.app.use('/dato', datoRoutes_1.datoRoutes);
+        this.app.use('/', datoRoutes_1.datoRoutes);
     }
     start() {
         this.app.listen(this.app.get('port'), () => {

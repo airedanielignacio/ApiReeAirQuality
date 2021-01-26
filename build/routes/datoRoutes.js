@@ -15,11 +15,35 @@ const dato_1 = require("../model/dato");
 const database_1 = require("../database/database");
 class DatoRoutes {
     constructor() {
-        this.getDatos = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getSpain = (req, res) => __awaiter(this, void 0, void 0, function* () {
             yield database_1.db.conectarBD()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
                 console.log(mensaje);
-                const query = yield dato_1.Datos.findOne().sort({ date: -1 });
+                const query = yield dato_1.DatosDispositivosFijos.findOne({ ID: "Spain" }).sort({ date: -1 });
+                res.json(query);
+            }))
+                .catch((mensaje) => {
+                res.send(mensaje);
+            });
+            database_1.db.desconectarBD();
+        });
+        this.getGreece = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield database_1.db.conectarBD()
+                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
+                console.log(mensaje);
+                const query = yield dato_1.DatosDispositivosFijos.findOne({ ID: "Greece" }).sort({ date: -1 });
+                res.json(query);
+            }))
+                .catch((mensaje) => {
+                res.send(mensaje);
+            });
+            database_1.db.desconectarBD();
+        });
+        this.getBulgaria = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield database_1.db.conectarBD()
+                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
+                console.log(mensaje);
+                const query = yield dato_1.DatosDispositivosFijos.findOne({ ID: "Bulgaria" }).sort({ date: -1 });
                 res.json(query);
             }))
                 .catch((mensaje) => {
@@ -33,7 +57,9 @@ class DatoRoutes {
         return this._router;
     }
     misRutas() {
-        this._router.get('/', this.getDatos);
+        this._router.get('/spain', this.getSpain),
+            this._router.get('/greece', this.getGreece),
+            this._router.get('/bulgary', this.getBulgaria);
     }
 }
 const obj = new DatoRoutes();
