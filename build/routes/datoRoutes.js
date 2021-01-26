@@ -59,7 +59,7 @@ class DatoRoutes {
     misRutas() {
         this._router.get('/spain', this.getSpain),
             this._router.get('/greece', this.getGreece),
-            this._router.get('/bulgary', this.getBulgaria);
+            this._router.get('/bulgaria', this.getBulgaria);
     }
 }
 const obj = new DatoRoutes();
