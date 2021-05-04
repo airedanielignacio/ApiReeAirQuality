@@ -47,6 +47,30 @@ class DatoRoutes {
             });
             database_1.db.desconectarBD();
         });
+        this.getHistoricos = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let { pais, anyo, mes } = req.params;
+            let anyov = "^" + anyo + "-" + mes;
+            let paisv = "Patra-2, Greece";
+            if (pais == "spain") {
+                paisv = "Bermejales, Sevilla, Spain";
+            }
+            else if (pais == "bulgaria") {
+                paisv = "Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)";
+            }
+            yield database_1.db.conectarBD2()
+                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
+                console.log(mensaje);
+                const query = yield dato_1.DatosHistoricos.find({
+                    "data.city.name": paisv,
+                    "data.time.s": { $regex: anyov }
+                });
+                res.json(query);
+            }))
+                .catch((mensaje) => {
+                res.send(mensaje);
+            });
+            database_1.db.desconectarBD2();
+        });
         this._router = express_1.Router();
     }
     get router() {
@@ -55,6 +79,7 @@ class DatoRoutes {
     misRutas() {
         this._router.get('/fijo/:id', this.getFijo),
             this._router.get('/portable', this.getPortables);
+        this._router.get('/historicos/:pais&:anyo&:mes', this.getHistoricos);
     }
 }
 const obj = new DatoRoutes();

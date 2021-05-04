@@ -1,5 +1,5 @@
 import {Request, Response, Router } from 'express'
-import { DatosDispositivosFijos, DatosDispositivosPortables } from '../model/dato'
+import { DatosDispositivosFijos, DatosDispositivosPortables, DatosHistoricos } from '../model/dato'
 import { db } from '../database/database'
 
 class DatoRoutes {
@@ -46,11 +46,37 @@ class DatoRoutes {
 
         db.desconectarBD()
     }
+
+    private getHistoricos = async (req: Request, res: Response) => {
+        let {pais, anyo, mes} = req.params
+        let anyov= "^"+anyo+"-"+mes
+        let paisv = "Patra-2, Greece"
+        if (pais=="spain"){
+            paisv="Bermejales, Sevilla, Spain"
+        } else if (pais=="bulgaria"){
+            paisv="Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)"
+        }
+        await db.conectarBD2()
+        .then( async (mensaje) => {
+            console.log(mensaje)
+            const query  = await DatosHistoricos.find({
+                "data.city.name":paisv,
+                "data.time.s": {$regex: anyov}
+        })
+            res.json(query)
+        })
+        .catch((mensaje) => {
+            res.send(mensaje)
+        })
+
+        db.desconectarBD2()
+    }
    
 
     misRutas(){
         this._router.get('/fijo/:id', this.getFijo),
         this._router.get('/portable', this.getPortables)
+        this._router.get('/historicos/:pais&:anyo&:mes', this.getHistoricos)
     }
 }
 

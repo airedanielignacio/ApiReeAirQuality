@@ -17,6 +17,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 class DataBase {
     constructor() {
         this._cadenaConexion = `mongodb+srv://myair:air@cluster0.mms5n.mongodb.net/DatosCalidadAire?retryWrites=true&w=majority`;
+        this._cadenaConexion2 = `mongodb+srv://aire:aire@cluster0.sentg.mongodb.net/test?retryWrites=true&w=majority`;
         this.conectarBD = () => __awaiter(this, void 0, void 0, function* () {
             const promise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 yield mongoose_1.default.connect(this._cadenaConexion, {
@@ -35,6 +36,27 @@ class DataBase {
                 yield mongoose_1.default.disconnect()
                     .then(() => resolve(`Desconectado de ${this._cadenaConexion}`))
                     .catch((error) => reject(`Error desconectando de ${this._cadenaConexion}: ${error}`));
+            }));
+            return promise;
+        });
+        this.conectarBD2 = () => __awaiter(this, void 0, void 0, function* () {
+            const promise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                yield mongoose_1.default.connect(this._cadenaConexion2, {
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true,
+                    useCreateIndex: true,
+                    useFindAndModify: false // para usar findOneAndDelete y findAndModify
+                })
+                    .then(() => resolve(`Conectado a ${this._cadenaConexion2}`))
+                    .catch((error) => reject(`Error conectando a ${this._cadenaConexion2}: ${error}`));
+            }));
+            return promise;
+        });
+        this.desconectarBD2 = () => __awaiter(this, void 0, void 0, function* () {
+            const promise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                yield mongoose_1.default.disconnect()
+                    .then(() => resolve(`Desconectado de ${this._cadenaConexion2}`))
+                    .catch((error) => reject(`Error desconectando de ${this._cadenaConexion2}: ${error}`));
             }));
             return promise;
         });
