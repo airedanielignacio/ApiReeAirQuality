@@ -98,7 +98,7 @@ class DatoRoutes {
                             mediaNO2: { $avg: "$data.iaqi.no2.v" },
                             mediaPM10: { $avg: "$data.iaqi.pm10.v" }
                         }
-                    }, {}
+                    }
                 ]);
                 res.json(query);
             }))
