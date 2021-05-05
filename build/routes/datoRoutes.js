@@ -48,8 +48,8 @@ class DatoRoutes {
             database_1.db.desconectarBD();
         });
         this.getHistoricos = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let { pais, anyo, mes } = req.params;
-            let anyov = "^" + anyo + "-" + mes;
+            let { pais, anyo, mes, dia } = req.params;
+            let fecha = "^" + anyo + "-" + mes + " - " + dia;
             let paisv = "Patra-2, Greece";
             if (pais == "spain") {
                 paisv = "Bermejales, Sevilla, Spain";
@@ -62,7 +62,7 @@ class DatoRoutes {
                 console.log(mensaje);
                 const query = yield dato_1.DatosHistoricos.find({
                     "data.city.name": paisv,
-                    "data.time.s": { $regex: anyov }
+                    "data.time.s": { $regex: fecha }
                 });
                 res.json(query);
             }))

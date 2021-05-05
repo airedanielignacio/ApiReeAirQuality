@@ -48,8 +48,8 @@ class DatoRoutes {
     }
 
     private getHistoricos = async (req: Request, res: Response) => {
-        let {pais, anyo, mes} = req.params
-        let anyov= "^"+anyo+"-"+mes
+        let {pais, anyo, mes, dia} = req.params
+        let fecha= "^"+anyo+"-"+mes+" - "+dia
         let paisv = "Patra-2, Greece"
         if (pais=="spain"){
             paisv="Bermejales, Sevilla, Spain"
@@ -61,7 +61,7 @@ class DatoRoutes {
             console.log(mensaje)
             const query  = await DatosHistoricos.find({
                 "data.city.name":paisv,
-                "data.time.s": {$regex: anyov}
+                "data.time.s": {$regex: fecha}
         })
             res.json(query)
         })
