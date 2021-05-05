@@ -76,7 +76,7 @@ class DatoRoutes {
     misRutas(){
         this._router.get('/fijo/:id', this.getFijo),
         this._router.get('/portable', this.getPortables)
-        this._router.get('/historicos/:pais&:anyo&:mes', this.getHistoricos)
+        this._router.get('/historicos/:pais&:anyo&:mes&:dia', this.getHistoricos)
     }
 }
 
