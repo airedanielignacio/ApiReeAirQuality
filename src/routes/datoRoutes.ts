@@ -59,31 +59,6 @@ class DatoRoutes {
         await db.conectarBD2()
         .then( async (mensaje) => {
             console.log(mensaje)
-            const query  = await DatosHistoricos.find({
-                "data.city.name":paisv,
-                "data.time.s": {$regex: fecha}
-        })
-            res.json(query)
-        })
-        .catch((mensaje) => {
-            res.send(mensaje)
-        })
-
-        db.desconectarBD2()
-    }
-
-    private getHistoricos2 = async (req: Request, res: Response) => {
-        let {pais, anyo, mes, dia} = req.params
-        let fecha= "^"+anyo+"-"+mes+"-"+dia
-        let paisv = "Patra-2, Greece"
-        if (pais=="spain"){
-            paisv="Bermejales, Sevilla, Spain"
-        } else if (pais=="bulgaria"){
-            paisv="Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)"
-        }
-        await db.conectarBD2()
-        .then( async (mensaje) => {
-            console.log(mensaje)
             const query  = await DatosHistoricos.aggregate(
                 [
                     {
@@ -117,8 +92,7 @@ class DatoRoutes {
     misRutas(){
         this._router.get('/fijo/:id', this.getFijo),
         this._router.get('/portable', this.getPortables),
-        this._router.get('/historicos/:pais&:anyo&:mes&:dia', this.getHistoricos),
-        this._router.get('/historicos2/:pais&:anyo&:mes&:dia', this.getHistoricos2)
+        this._router.get('/historicos/:pais&:anyo&:mes&:dia', this.getHistoricos)
     }
 }
 
