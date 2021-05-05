@@ -49,7 +49,7 @@ class DatoRoutes {
 
     private getHistoricos = async (req: Request, res: Response) => {
         let {pais, anyo, mes, dia} = req.params
-        let fecha= "^"+anyo+"-"+mes+" - "+dia
+        let fecha= "^"+anyo+"-"+mes+"-"+dia
         let paisv = "Patra-2, Greece"
         if (pais=="spain"){
             paisv="Bermejales, Sevilla, Spain"
