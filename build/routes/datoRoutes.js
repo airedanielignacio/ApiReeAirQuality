@@ -83,6 +83,41 @@ class DatoRoutes {
             });
             database_1.db.desconectarBD2();
         });
+        this.getHistoricos2 = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let { contaminante, pais, anyo } = req.params;
+            let fecha = "^" + anyo;
+            let paisv = "Patra-2, Greece";
+            if (pais == "spain") {
+                paisv = "Bermejales, Sevilla, Spain";
+            }
+            else if (pais == "bulgaria") {
+                paisv = "Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)";
+            }
+            let c = "$data.iaqi." + contaminante + ".v";
+            yield database_1.db.conectarBD2()
+                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
+                console.log(mensaje);
+                const query = yield dato_1.DatosHistoricos.aggregate([
+                    {
+                        $match: {
+                            "data.city.name": paisv,
+                            "data.time.s": { $regex: fecha }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { $substr: ["$data.time.s", 0, 10] },
+                            v: { $avg: c }
+                        }
+                    }
+                ]);
+                res.json(query);
+            }))
+                .catch((mensaje) => {
+                res.send(mensaje);
+            });
+            database_1.db.desconectarBD2();
+        });
         this._router = express_1.Router();
     }
     get router() {
@@ -91,7 +126,8 @@ class DatoRoutes {
     misRutas() {
         this._router.get('/fijo/:id', this.getFijo),
             this._router.get('/portable', this.getPortables),
-            this._router.get('/historicos/:pais&:anyo&:mes&:dia', this.getHistoricos);
+            this._router.get('/historicos/:pais&:anyo&:mes&:dia', this.getHistoricos),
+            this._router.get('/historicos2/:contaminante&:pais&:anyo', this.getHistoricos2);
     }
 }
 const obj = new DatoRoutes();
