@@ -163,6 +163,8 @@ class DatoRoutes {
                         $group: {
                             _id: { $substr: ["$data.time.s", 0, 4] },
                         }
+                    }, {
+                        $sort: { _id: 1 }
                     }
                 ]);
                 res.json(query);
