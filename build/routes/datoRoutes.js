@@ -154,6 +154,24 @@ class DatoRoutes {
             });
             database_1.db.desconectarBD2();
         });
+        this.anyos = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield database_1.db.conectarBD2()
+                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
+                console.log(mensaje);
+                const query = yield dato_1.DatosHistoricos.aggregate([
+                    {
+                        $group: {
+                            _id: { $substr: ["$data.time.s", 0, 3] },
+                        }
+                    }
+                ]);
+                res.json(query);
+            }))
+                .catch((mensaje) => {
+                res.send(mensaje);
+            });
+            database_1.db.desconectarBD2();
+        });
         this._router = express_1.Router();
     }
     get router() {

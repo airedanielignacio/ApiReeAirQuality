@@ -165,6 +165,28 @@ class DatoRoutes {
 
         db.desconectarBD2()
     }
+    private anyos = async (req: Request, res: Response) => {
+        await db.conectarBD2()
+        .then( async (mensaje) => {
+            console.log(mensaje)
+            const query  = await DatosHistoricos.aggregate(
+                [          
+                    {
+                        $group:
+                        {
+                            _id: {$substr: ["$data.time.s", 0, 3]},
+                        }
+                    }
+                ]
+             )
+            res.json(query)
+        })
+        .catch((mensaje) => {
+            res.send(mensaje)
+        })
+
+        db.desconectarBD2()
+    }
    
    
 
