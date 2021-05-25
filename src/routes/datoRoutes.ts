@@ -50,11 +50,11 @@ class DatoRoutes {
     private getHistoricos = async (req: Request, res: Response) => {
         let {pais, anyo, mes, dia} = req.params
         let fecha= "^"+anyo+"-"+mes+"-"+dia
-        let paisv = "Patra-2, Greece"
+        let paisv = 12410
         if (pais=="spain"){
-            paisv="Bermejales, Sevilla, Spain"
+            paisv=8495
         } else if (pais=="bulgaria"){
-            paisv="Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)"
+            paisv=8084
         }
         await db.conectarBD2()
         .then( async (mensaje) => {
@@ -63,7 +63,7 @@ class DatoRoutes {
                 [
                     {
                         $match: {
-                            "data.city.name":paisv,
+                            "data.idx":paisv,
                             "data.time.s": {$regex: fecha}
                         }
                     },            
@@ -90,11 +90,11 @@ class DatoRoutes {
     private getHistoricos2 = async (req: Request, res: Response) => {
         let {contaminante, pais, anyo} = req.params
         let fecha= "^"+anyo
-        let paisv = "Patra-2, Greece"
+        let paisv = 12410
         if (pais=="spain"){
-            paisv="Bermejales, Sevilla, Spain"
+            paisv=8495
         } else if (pais=="bulgaria"){
-            paisv="Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)"
+            paisv=8084
         }
         let c = "$data.iaqi."+contaminante+".v"
         await db.conectarBD2()
@@ -104,7 +104,7 @@ class DatoRoutes {
                 [
                     {
                         $match: {
-                            "data.city.name":paisv,
+                            "data.idx":paisv,
                             "data.time.s": {$regex: fecha}
                         }
                     },            
@@ -129,11 +129,11 @@ class DatoRoutes {
     private getHistoricos3 = async (req: Request, res: Response) => {
         let {pais, anyo, mes} = req.params
         let fecha= "^"+anyo+"-"+mes
-        let paisv = "Patra-2, Greece"
+        let paisv = 12410
         if (pais=="spain"){
-            paisv="Bermejales, Sevilla, Spain"
+            paisv=8495
         } else if (pais=="bulgaria"){
-            paisv="Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)"
+            paisv=8084
         }
         await db.conectarBD2()
         .then( async (mensaje) => {
@@ -142,7 +142,7 @@ class DatoRoutes {
                 [
                     {
                         $match: {
-                            "data.city.name":paisv,
+                            "data.idx":paisv,
                             "data.time.s": {$regex: fecha}
                         }
                     },            

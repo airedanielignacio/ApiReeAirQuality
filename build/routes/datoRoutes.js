@@ -50,12 +50,12 @@ class DatoRoutes {
         this.getHistoricos = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let { pais, anyo, mes, dia } = req.params;
             let fecha = "^" + anyo + "-" + mes + "-" + dia;
-            let paisv = "Patra-2, Greece";
+            let paisv = 12410;
             if (pais == "spain") {
-                paisv = "Bermejales, Sevilla, Spain";
+                paisv = 8495;
             }
             else if (pais == "bulgaria") {
-                paisv = "Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)";
+                paisv = 8084;
             }
             yield database_1.db.conectarBD2()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
@@ -63,7 +63,7 @@ class DatoRoutes {
                 const query = yield dato_1.DatosHistoricos.aggregate([
                     {
                         $match: {
-                            "data.city.name": paisv,
+                            "data.idx": paisv,
                             "data.time.s": { $regex: fecha }
                         }
                     },
@@ -86,12 +86,12 @@ class DatoRoutes {
         this.getHistoricos2 = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let { contaminante, pais, anyo } = req.params;
             let fecha = "^" + anyo;
-            let paisv = "Patra-2, Greece";
+            let paisv = 12410;
             if (pais == "spain") {
-                paisv = "Bermejales, Sevilla, Spain";
+                paisv = 8495;
             }
             else if (pais == "bulgaria") {
-                paisv = "Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)";
+                paisv = 8084;
             }
             let c = "$data.iaqi." + contaminante + ".v";
             yield database_1.db.conectarBD2()
@@ -100,7 +100,7 @@ class DatoRoutes {
                 const query = yield dato_1.DatosHistoricos.aggregate([
                     {
                         $match: {
-                            "data.city.name": paisv,
+                            "data.idx": paisv,
                             "data.time.s": { $regex: fecha }
                         }
                     },
@@ -121,12 +121,12 @@ class DatoRoutes {
         this.getHistoricos3 = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let { pais, anyo, mes } = req.params;
             let fecha = "^" + anyo + "-" + mes;
-            let paisv = "Patra-2, Greece";
+            let paisv = 12410;
             if (pais == "spain") {
-                paisv = "Bermejales, Sevilla, Spain";
+                paisv = 8495;
             }
             else if (pais == "bulgaria") {
-                paisv = "Druzhba, Sofia, Bulgaria (Дружба, Столична, Bulgaria)";
+                paisv = 8084;
             }
             yield database_1.db.conectarBD2()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
@@ -134,7 +134,7 @@ class DatoRoutes {
                 const query = yield dato_1.DatosHistoricos.aggregate([
                     {
                         $match: {
-                            "data.city.name": paisv,
+                            "data.idx": paisv,
                             "data.time.s": { $regex: fecha }
                         }
                     },
