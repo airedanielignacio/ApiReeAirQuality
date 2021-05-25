@@ -274,7 +274,7 @@ class DatoRoutes {
                     }
                 ]
              )
-             console.log(query)
+            console.log(query)
             res.json(query)
         })
         .catch((mensaje) => {
@@ -293,7 +293,7 @@ class DatoRoutes {
         this._router.get('/historicos2/:contaminante&:pais&:anyo', this.getHistoricos2),
         this._router.get('/historicos3/:pais&:anyo&:mes', this.getHistoricos3)
         this._router.get('/anyos', this.anyos),
-        this._router.post(':id/:fechaInicial/:fechaFinal', this.postHistoricos)
+        this._router.get('/fechas/:id&:fechaInicial&:fechaFinal', this.postHistoricos)
     }
 }
 
