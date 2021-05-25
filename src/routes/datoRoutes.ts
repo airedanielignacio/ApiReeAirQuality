@@ -196,6 +196,7 @@ class DatoRoutes {
         this._router.get('/historicos/:pais&:anyo&:mes&:dia', this.getHistoricos),
         this._router.get('/historicos2/:contaminante&:pais&:anyo', this.getHistoricos2),
         this._router.get('/historicos3/:pais&:anyo&:mes', this.getHistoricos3)
+        this._router.get('/anyos', this.anyos)
     }
 }
 
