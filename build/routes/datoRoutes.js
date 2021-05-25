@@ -39,7 +39,7 @@ class DatoRoutes {
             yield database_1.db.conectarBD()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
                 console.log(mensaje);
-                const query = yield dato_1.DatosDispositivosPortables.find();
+                const query = yield dato_1.DatosDispositivosPortables.find({ Coordenadas: { $exists: true }, "Coordenadas.Latitud": { $ne: NaN } });
                 res.json(query);
             }))
                 .catch((mensaje) => {
@@ -174,92 +174,6 @@ class DatoRoutes {
             });
             database_1.db.desconectarBD2();
         });
-        this.postHistoricos = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const estacion = parseInt(req.params.id); //8495
-            const fechaInicial = req.params.fechaInicial; //"2020-01-01"
-            const fechaFinal = req.params.fechaFinal;
-            yield database_1.db.conectarBD2()
-                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
-                const query = yield dato_1.DatosHistoricos.aggregate([
-                    {
-                        $match: {
-                            "data.idx": estacion,
-                            $and: [
-                                {
-                                    "data.time.s": {
-                                        $gte: fechaInicial
-                                    }
-                                },
-                                {
-                                    "data.time.s": {
-                                        $lte: fechaFinal
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            "data.idx": 1,
-                            date: {
-                                $dateFromString: {
-                                    dateString: { $substr: ["$data.time.s", 0, 10] },
-                                    format: "%Y-%m-%d" // -> on-line :%S 
-                                }
-                            },
-                            datos: {
-                                $objectToArray: "$data.iaqi"
-                            }
-                        }
-                    },
-                    {
-                        $unwind: "$datos"
-                    },
-                    {
-                        $project: {
-                            "data.idx": 1,
-                            datos: 1,
-                            date: 1
-                        }
-                    },
-                    {
-                        $group: {
-                            _id: {
-                                estacion: "$data.idx",
-                                fecha: "$date",
-                                cont: "$datos.k"
-                            },
-                            v: {
-                                $avg: {
-                                    $cond: { if: { $gte: ["$datos.v.v", ""] }, then: 0, else: "$datos.v.v" }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            estacion: "$_id.estacion",
-                            fecha: "$_id.fecha",
-                            contaminante: "$_id.cont",
-                            valor: "$v"
-                        }
-                    },
-                    {
-                        $sort: {
-                            fecha: 1
-                        }
-                    }
-                ]);
-                console.log(query);
-                res.json(query);
-            }))
-                .catch((mensaje) => {
-                res.send(mensaje);
-            });
-            database_1.db.desconectarBD2();
-        });
         this._router = express_1.Router();
     }
     get router() {
@@ -271,8 +185,7 @@ class DatoRoutes {
             this._router.get('/historicos/:pais&:anyo&:mes&:dia', this.getHistoricos),
             this._router.get('/historicos2/:contaminante&:pais&:anyo', this.getHistoricos2),
             this._router.get('/historicos3/:pais&:anyo&:mes', this.getHistoricos3);
-        this._router.get('/anyos', this.anyos),
-            this._router.get('/fechas/:id&:fechaInicial&:fechaFinal', this.postHistoricos);
+        this._router.get('/anyos', this.anyos);
     }
 }
 const obj = new DatoRoutes();
