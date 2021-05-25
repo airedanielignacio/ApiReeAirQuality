@@ -161,7 +161,7 @@ class DatoRoutes {
                 const query = yield dato_1.DatosHistoricos.aggregate([
                     {
                         $group: {
-                            _id: { $substr: ["$data.time.s", 0, 3] },
+                            _id: { $substr: ["$data.time.s", 0, 4] },
                         }
                     }
                 ]);
