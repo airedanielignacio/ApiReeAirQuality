@@ -194,97 +194,97 @@ class DatoRoutes {
         db.desconectarBD2()
     }
 
-    private hisoricosPost = async (req: Request, res: Response) => {
-        const estacion =   parseInt(req.params.id); //8495
-        const fechaInicial =  req.params.fechaInicial;   //"2020-01-01"
-        const fechaFinal =  req.params.fechaFinal;       //"2020-01-05"
-        await db.conectarBD2()
-        .then( async (mensaje) => {
-            console.log(mensaje)
-            const query  = await DatosHistoricos.aggregate(
-                [          
-                    {
-                        $match: {
-                            "data.idx": estacion,
-                            $and: [
-                                {
-                                    "data.time.s": {
-                                        $gte: fechaInicial
-                                    }
-                                },
-                                {
-                                    "data.time.s": {
-                                        $lte: fechaFinal
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        $project:{
-                            _id:0,
-                            "data.idx":1,
-                            date: {
-                                $dateFromString: {
-                                    dateString: {$substr: ["$data.time.s", 0, 10]},  // coger los 16 primeros para cuando no haya segundos
-                                    format: "%Y-%m-%d" // -> on-line :%S 
-                                }
-                            },
-                            datos:{
-                                $objectToArray:"$data.iaqi"
-                            }
+    // private hisoricosPost = async (req: Request, res: Response) => {
+    //     const estacion =   parseInt(req.params.id); //8495
+    //     const fechaInicial =  req.params.fechaInicial;   //"2020-01-01"
+    //     const fechaFinal =  req.params.fechaFinal;       //"2020-01-05"
+    //     await db.conectarBD2()
+    //     .then( async (mensaje) => {
+    //         console.log(mensaje)
+    //         const query  = await DatosHistoricos.aggregate(
+    //             [          
+    //                 {
+    //                     $match: {
+    //                         "data.idx": estacion,
+    //                         $and: [
+    //                             {
+    //                                 "data.time.s": {
+    //                                     $gte: fechaInicial
+    //                                 }
+    //                             },
+    //                             {
+    //                                 "data.time.s": {
+    //                                     $lte: fechaFinal
+    //                                 }
+    //                             }
+    //                         ]
+    //                     }
+    //                 },
+    //                 {
+    //                     $project:{
+    //                         _id:0,
+    //                         "data.idx":1,
+    //                         date: {
+    //                             $dateFromString: {
+    //                                 dateString: {$substr: ["$data.time.s", 0, 10]},  // coger los 16 primeros para cuando no haya segundos
+    //                                 format: "%Y-%m-%d" // -> on-line :%S 
+    //                             }
+    //                         },
+    //                         datos:{
+    //                             $objectToArray:"$data.iaqi"
+    //                         }
             
-                        }
-                    },
-                    {
-                        $unwind: "$datos"
-                    },
-                    {
-                        $project:{
-                            "data.idx":1,
-                            datos:1,
-                            date:1
+    //                     }
+    //                 },
+    //                 {
+    //                     $unwind: "$datos"
+    //                 },
+    //                 {
+    //                     $project:{
+    //                         "data.idx":1,
+    //                         datos:1,
+    //                         date:1
             
-                        }
-                    },
-                    {
-                        $group: {
-                            _id:{
-                                estacion:"$data.idx",
-                                fecha:"$date",
-                                cont:"$datos.k"
-                            },
-                            v:{
-                                $avg:{
-                                    $cond: { if: { $gte: [ "$datos.v.v", "" ] }, then: 0, else: "$datos.v.v" }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        $project:{
-                            _id:0,
-                            estacion:"$_id.estacion",
-                            fecha:"$_id.fecha",
-                            contaminante:"$_id.cont",
-                            valor:"$v"
-                        }
-                    },
-                    {
-                        $sort:{
-                            fecha:1
-                        }
-                    }
-                ]
-             )
-            res.json(query)
-        })
-        .catch((mensaje) => {
-            res.send(mensaje)
-        })
+    //                     }
+    //                 },
+    //                 {
+    //                     $group: {
+    //                         _id:{
+    //                             estacion:"$data.idx",
+    //                             fecha:"$date",
+    //                             cont:"$datos.k"
+    //                         },
+    //                         v:{
+    //                             $avg:{
+    //                                 $cond: { if: { $gte: [ "$datos.v.v", "" ] }, then: 0, else: "$datos.v.v" }
+    //                             }
+    //                         }
+    //                     }
+    //                 },
+    //                 {
+    //                     $project:{
+    //                         _id:0,
+    //                         estacion:"$_id.estacion",
+    //                         fecha:"$_id.fecha",
+    //                         contaminante:"$_id.cont",
+    //                         valor:"$v"
+    //                     }
+    //                 },
+    //                 {
+    //                     $sort:{
+    //                         fecha:1
+    //                     }
+    //                 }
+    //             ]
+    //          )
+    //         res.json(query)
+    //     })
+    //     .catch((mensaje) => {
+    //         res.send(mensaje)
+    //     })
 
-        db.desconectarBD2()
-    }
+    //     db.desconectarBD2()
+    // }
    
 
     misRutas(){
@@ -294,7 +294,7 @@ class DatoRoutes {
         this._router.get('/historicos2/:contaminante&:pais&:anyo', this.getHistoricos2),
         this._router.get('/historicos3/:pais&:anyo&:mes', this.getHistoricos3),
         this._router.get('/anyos', this.anyos),
-        this._router.post('/historicos/:id&:fechaInicial&:fechaFinal', this.hisoricosPost),
+        // this._router.post('/historicos/:id&:fechaInicial&:fechaFinal', this.hisoricosPost),
     }
 }
 
