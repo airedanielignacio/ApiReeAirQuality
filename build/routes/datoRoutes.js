@@ -264,10 +264,10 @@ class DatoRoutes {
             const estacion = parseInt(req.params.id); //8495
             const fechaInicial = req.params.fechaInicial; //"2020-01-01"
             const fechaFinal = req.params.fechaFinal; //"2020-01-05"
-            yield database_1.db.conectarBD2()
+            yield database_1.db.conectarBD()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
                 console.log(mensaje);
-                const query = yield dato_1.DatosHistoricos.aggregate([
+                const query = yield dato_1.DatosDispositivosFijos.aggregate([
                     {
                         $match: {
                             ID: estacion,
@@ -331,7 +331,7 @@ class DatoRoutes {
                 .catch((mensaje) => {
                 res.send(mensaje);
             });
-            database_1.db.desconectarBD2();
+            database_1.db.desconectarBD();
         });
         this._router = express_1.Router();
     }

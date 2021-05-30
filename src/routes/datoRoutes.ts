@@ -290,10 +290,10 @@ class DatoRoutes {
         const estacion =   parseInt(req.params.id); //8495
         const fechaInicial =  req.params.fechaInicial;   //"2020-01-01"
         const fechaFinal =  req.params.fechaFinal;       //"2020-01-05"
-        await db.conectarBD2()
+        await db.conectarBD()
         .then( async (mensaje) => {
             console.log(mensaje)
-            const query  = await DatosHistoricos.aggregate(
+            const query  = await DatosDispositivosFijos.aggregate(
                 [          
                     {
                         $match:{
@@ -361,7 +361,7 @@ class DatoRoutes {
             res.send(mensaje)
         })
 
-        db.desconectarBD2()
+        db.desconectarBD()
     }
    
 
