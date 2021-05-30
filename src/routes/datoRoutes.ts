@@ -285,6 +285,84 @@ class DatoRoutes {
 
         db.desconectarBD2()
     }
+
+    private postPropios = async (req: Request, res: Response) => {
+        const estacion =   parseInt(req.params.id); //8495
+        const fechaInicial =  req.params.fechaInicial;   //"2020-01-01"
+        const fechaFinal =  req.params.fechaFinal;       //"2020-01-05"
+        await db.conectarBD2()
+        .then( async (mensaje) => {
+            console.log(mensaje)
+            const query  = await DatosHistoricos.aggregate(
+                [          
+                    {
+                        $match:{
+                            ID: estacion,
+                            $and:[
+                                {date:{$gte:fechaInicial}},
+                                {date:{$lte:fechaFinal}}
+                            ]
+                        }
+                    },
+                    {
+                        $project:{
+                            estacion:"$ID",
+                            date: {
+                                $dateFromString: {
+                                    dateString: {$substr: [{$dateToString:{date: "$date", format: "%Y-%m-%d"}}, 0, 10]},  // coger los 16 primeros para cuando no haya segundos
+                                    format: "%Y-%m-%d" // -> on-line :%S 
+                                }
+                            },
+            
+                            contaminantes:[
+                                {nombre:"NO",v:"$NO"},
+                                {nombre:"NH3",v:"$NH3"},
+                                {nombre:"CO",v:"$CO"},
+                                {nombre:"CO2",v:"$CO2"},
+                                {nombre:"PM10",v:"$PM10"},
+                                {nombre:"PM25",v:"$PM25"}
+                            ]
+                        }
+                    },
+                    {
+                        $unwind:"$contaminantes"
+                    },
+                    {
+                        $group: {
+                            _id:{
+                                ID:"$estacion",
+                                fecha:"$date",
+                                contaminantes:"$contaminantes.nombre"
+                            },
+                            v:{
+                                $avg:"$contaminantes.v"
+                            }
+                        }
+                    },
+                    {
+                        $project:{
+                            _id:0,
+                            estacion:"$_id.ID",
+                            fecha:"$_id.fecha",
+                            contaminante:"$_id.contaminantes",
+                            valor:"$v"
+                        }
+                    },
+                    {
+                        $sort:{
+                            fecha:1
+                        }
+                    }
+                ]
+             )
+            res.json(query)
+        })
+        .catch((mensaje) => {
+            res.send(mensaje)
+        })
+
+        db.desconectarBD2()
+    }
    
 
     misRutas(){
@@ -294,7 +372,8 @@ class DatoRoutes {
         this._router.get('/historicos2/:contaminante&:pais&:anyo', this.getHistoricos2),
         this._router.get('/historicos3/:pais&:anyo&:mes', this.getHistoricos3),
         this._router.get('/anyos', this.anyos),
-        this._router.post('/historicos/:id&:fechaInicial&:fechaFinal', this.hisoricosPost)
+        this._router.post('/historicos/:id&:fechaInicial&:fechaFinal', this.hisoricosPost),
+        this._router.post('/propios/:id&:fechaInicial&:fechaFinal', this.postPropios)
     }
 }
 

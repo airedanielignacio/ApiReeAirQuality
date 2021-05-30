@@ -260,6 +260,79 @@ class DatoRoutes {
             });
             database_1.db.desconectarBD2();
         });
+        this.postPropios = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const estacion = parseInt(req.params.id); //8495
+            const fechaInicial = req.params.fechaInicial; //"2020-01-01"
+            const fechaFinal = req.params.fechaFinal; //"2020-01-05"
+            yield database_1.db.conectarBD2()
+                .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
+                console.log(mensaje);
+                const query = yield dato_1.DatosHistoricos.aggregate([
+                    {
+                        $match: {
+                            ID: estacion,
+                            $and: [
+                                { date: { $gte: fechaInicial } },
+                                { date: { $lte: fechaFinal } }
+                            ]
+                        }
+                    },
+                    {
+                        $project: {
+                            estacion: "$ID",
+                            date: {
+                                $dateFromString: {
+                                    dateString: { $substr: [{ $dateToString: { date: "$date", format: "%Y-%m-%d" } }, 0, 10] },
+                                    format: "%Y-%m-%d" // -> on-line :%S 
+                                }
+                            },
+                            contaminantes: [
+                                { nombre: "NO", v: "$NO" },
+                                { nombre: "NH3", v: "$NH3" },
+                                { nombre: "CO", v: "$CO" },
+                                { nombre: "CO2", v: "$CO2" },
+                                { nombre: "PM10", v: "$PM10" },
+                                { nombre: "PM25", v: "$PM25" }
+                            ]
+                        }
+                    },
+                    {
+                        $unwind: "$contaminantes"
+                    },
+                    {
+                        $group: {
+                            _id: {
+                                ID: "$estacion",
+                                fecha: "$date",
+                                contaminantes: "$contaminantes.nombre"
+                            },
+                            v: {
+                                $avg: "$contaminantes.v"
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            estacion: "$_id.ID",
+                            fecha: "$_id.fecha",
+                            contaminante: "$_id.contaminantes",
+                            valor: "$v"
+                        }
+                    },
+                    {
+                        $sort: {
+                            fecha: 1
+                        }
+                    }
+                ]);
+                res.json(query);
+            }))
+                .catch((mensaje) => {
+                res.send(mensaje);
+            });
+            database_1.db.desconectarBD2();
+        });
         this._router = express_1.Router();
     }
     get router() {
@@ -272,7 +345,8 @@ class DatoRoutes {
             this._router.get('/historicos2/:contaminante&:pais&:anyo', this.getHistoricos2),
             this._router.get('/historicos3/:pais&:anyo&:mes', this.getHistoricos3),
             this._router.get('/anyos', this.anyos),
-            this._router.post('/historicos/:id&:fechaInicial&:fechaFinal', this.hisoricosPost);
+            this._router.post('/historicos/:id&:fechaInicial&:fechaFinal', this.hisoricosPost),
+            this._router.post('/propios/:id&:fechaInicial&:fechaFinal', this.postPropios);
     }
 }
 const obj = new DatoRoutes();
