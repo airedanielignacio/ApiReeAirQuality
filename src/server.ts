@@ -22,8 +22,6 @@ class Server {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers', '*');
             res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-            res.header('Allow', 'GET, POST, OPTIONS');
-            res.header('Access-Control-Allow-Origin: *')
             next();
         });
 
