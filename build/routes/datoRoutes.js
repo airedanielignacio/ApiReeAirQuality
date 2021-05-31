@@ -261,9 +261,9 @@ class DatoRoutes {
             database_1.db.desconectarBD2();
         });
         this.postPropios = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const estacion = parseInt(req.params.id); //8495
-            const fechaInicial = req.params.fechaInicial; //"2020-01-01"
-            const fechaFinal = req.params.fechaFinal; //"2020-01-05"
+            const estacion = req.params.id; //"Spain"
+            const fechaInicial = new Date(req.params.fechaI); // new Date("2020-03-19")
+            const fechaFinal = new Date(req.params.fechaF); //new Date("2020-03-25")
             yield database_1.db.conectarBD()
                 .then((mensaje) => __awaiter(this, void 0, void 0, function* () {
                 console.log(mensaje);
@@ -346,7 +346,7 @@ class DatoRoutes {
             this._router.get('/historicos3/:pais&:anyo&:mes', this.getHistoricos3),
             this._router.get('/anyos', this.anyos),
             this._router.post('/historicos/:id&:fechaInicial&:fechaFinal', this.hisoricosPost),
-            this._router.post('/propios/:id&:fechaInicial&:fechaFinal', this.postPropios);
+            this._router.post('/propios/:id&:fechaI&:fechaF', this.postPropios);
     }
 }
 const obj = new DatoRoutes();
